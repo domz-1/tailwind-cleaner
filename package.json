@@ -1,0 +1,24 @@
+{
+    "name": "tailwind-cleaner",
+    "version": "1.0.04",
+    "description": "A tool to replace hex colors with named colors in Tailwind CSS projects",
+    "main": "lib/index.js",
+    "type": "module",
+    "bin": {
+        "tailwind-cleaner-pkg": "bin/cli.js"
+    },
+    "scripts": {
+        "start": "node bin/cli.js"
+    },
+    "keywords": [
+        "tailwind",
+        "css",
+        "colors",
+        "optimization"
+    ],
+    "author": "Your Name",
+    "license": "MIT",
+    "dependencies": {
+        "color-2-name": "^1.4.4"
+    }
+}
