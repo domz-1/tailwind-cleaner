@@ -16,11 +16,11 @@
         "colors",
         "optimization",
         "cleaner"
-
     ],
     "author": "Your Name",
     "license": "MIT",
     "dependencies": {
-        "color-2-name": "^1.4.4"
+        "color-2-name": "^1.4.4",
+        "inquirer": "^12.9.1"
     }
 }
