@@ -108,10 +108,14 @@ async function main() {
     }
 
     console.log('\n✅ Processing completed successfully!');
+    process.exit(0);
   } catch (error) {
     console.error(`\n❌ Fatal error: ${error.message}`);
     process.exit(1);
   }
 }
 
-main();
+main().catch((error) => {
+  console.error(`\n❌ Unexpected error: ${error.message}`);
+  process.exit(1);
+});
