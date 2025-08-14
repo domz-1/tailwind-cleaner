@@ -1,14 +1,19 @@
-# Tailwind Color Cleaner
+![Tailwind Cleaner Logo](./public/logo.jpg)
 
-A tool to replace hex colors with named colors in Tailwind CSS projects.
+# Tailwind Cleaner
+
+
+A tool to convert arbitrary values (hex colors, units, etc.) into semantic named values in Tailwind CSS projects.
 
 ## Features
-
-- Replaces hex colors with named colors in your project files
-- Prioritizes existing Tailwind config colors 
+- Replaces hex colors and arbitrary values with semantic names in your project files
+- Converts numeric values and units (px, rem, etc.) to Tailwind's naming conventions
+- Prioritizes existing Tailwind config colors and spacing values
 - Uses Color Pizza API for color name matching
 - Falls back to color-2-name for local color matching
-- Updates your tailwind.config.js automatically
+- Automatically updates your tailwind.config.js with new semantic values
+- Maintains consistent naming across your entire project
+- Adding prefixes to semantic values to avoid naming conflicts
 
 ## Installation
 
