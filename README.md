@@ -1,4 +1,4 @@
-![Tailwind Cleaner Logo](./public/logo.jpg)
+![Tailwind Cleaner Logo](https://github.com/domz-1/tailwind-cleaner/raw/main/public/logo.jpg)
 
 # Tailwind Cleaner
 
