@@ -15,10 +15,29 @@
         "css",
         "colors",
         "optimization",
-        "cleaner"
+        "cleaner",
+        "semantic",
+        "naming",
+        "converter",
+        "hex-colors",
+        "units",
+        "spacing",
+        "theme",
+        "configuration",
+        "utility-classes",
+        "tailwindcss",
+        "automation",
+        "refactoring",
+        "code-quality",
+        "developer-tools",
+        "frontend"
     ],
     "author": "Your Name",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/domz-1/tailwind-cleaner"
+    },
     "dependencies": {
         "color-2-name": "^1.4.4",
         "inquirer": "^12.9.1"
