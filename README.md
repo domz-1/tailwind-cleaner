@@ -23,6 +23,7 @@ A tool to convert arbitrary values (hex colors, units, etc.) into semantic named
 - Automatically updates your tailwind.config.js with new semantic values
 - Maintains consistent naming across your entire project
 - Adding prefixes to semantic values to avoid naming conflicts
+- **[NEW]** Supports generating CSS variables for theming (modern Tailwind approach)
 ## Installation
 ### Using npx (recommended)
 Run directly with npx:
@@ -46,31 +47,12 @@ If you're using Tailwind CSS v4 with a `tailwind.config.js` file, add this at th
 @config "./path/to/tailwind.config.js";
 @import 'tailwindcss';
 ```
-Alternatively, you can manually move your colors to the `@theme` block using the new Theme variable namespaces format in Tailwind v4.
-## Theme Variable Namespaces
-Theme variables are defined in namespaces and each namespace corresponds to one or more utility class or variant APIs.
-Defining new theme variables in these namespaces will make new corresponding utilities and variants available in your project:
-| Namespace          | Utility Classes                                                          |
-| ------------------ | ------------------------------------------------------------------------ |
-| `--color-*`        | Color utilities like `bg-red-500`, `text-sky-300`, and many more         |
-| `--font-*`         | Font family utilities like `font-sans`                                   |
-| `--text-*`         | Font size utilities like `text-xl`                                       |
-| `--font-weight-*`  | Font weight utilities like `font-bold`                                   |
-| `--tracking-*`     | Letter spacing utilities like `tracking-wide`                            |
-| `--leading-*`      | Line height utilities like `leading-tight`                               |
-| `--breakpoint-*`   | Responsive breakpoint variants like `sm:*`                               |
-| `--container-*`    | Container query variants like `@sm:*` and size utilities like `max-w-md` |
-| `--spacing-*`      | Spacing and sizing utilities like `px-4`, `max-h-16`, and many more      |
-| `--radius-*`       | Border radius utilities like `rounded-sm`                                |
-| `--shadow-*`       | Box shadow utilities like `shadow-md`                                    |
-| `--inset-shadow-*` | Inset box shadow utilities like `inset-shadow-xs`                        |
-| `--drop-shadow-*`  | Drop shadow filter utilities like `drop-shadow-md`                       |
-| `--blur-*`         | Blur filter utilities like `blur-md`                                     |
-| `--perspective-*`  | Perspective utilities like `perspective-near`                            |
-| `--aspect-*`       | Aspect ratio utilities like `aspect-video`                               |
-| `--ease-*`         | Transition timing function utilities like `ease-out`                     |
-| `--animate-*`      | Animation utilities like `animate-spin`                                  |
-For a list of all of the default theme variables, see the [default theme variable reference](https://tailwindcss.com/docs/theme).
+## CSS Variables Support (New)
+The tool now supports the modern approach of using CSS variables for theming. When prompted, if you choose "Yes" to use CSS variables:
+1.  The tool will generate CSS variables (e.g., `--primary: 255 0 0;`) in your global CSS file (`src/globals.css`, `src/index.css`, etc.).
+2.  It will update your `tailwind.config.js` to reference these variables (e.g., `primary: 'rgb(var(--primary) / <alpha-value>)'`).
+
+This allows for easier dynamic theming and is compatible with modern Tailwind practices.
 ## Usage
 1. Run the tool in your project directory
 2. It will scan your project files for Tailwind classes and arbitrary values
