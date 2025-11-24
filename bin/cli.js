@@ -87,9 +87,18 @@ async function main() {
     }
   }
 
+  // Question 3: Ask about CSS variables
+  const { useCssVariables } = await inquirer.prompt({
+    type: 'confirm',
+    name: 'useCssVariables',
+    message: 'Would you like to use CSS variables for theming?',
+    default: false
+  });
+
   // Create config object to pass to replacers
   const config = {
-    prefix: prefix || undefined // undefined will be treated as no prefix
+    prefix: prefix || undefined, // undefined will be treated as no prefix
+    useCssVariables
   };
 
   try {
