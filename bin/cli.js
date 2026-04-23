@@ -8,6 +8,7 @@ import { readFileSync, existsSync } from 'fs';
 import path from 'path';
 import ColorReplacer from '../lib/color.js';
 import ArbitraryValueReplacer from '../lib/units.js';
+import { buildExcludeList } from '../lib/excludes.js';
 
 const VERSION = '2.0.0';
 const rootDir = process.argv[2] || '.';
@@ -232,28 +233,56 @@ async function main() {
     console.log(chalk.dim(`  → Using prefix: "${chalk.white(prefix)}"\n`));
   }
 
-  // ── Question 3: CSS Variables ─────────────────────────────────────
+  // ── Question 3: Approach (v3: CSS vars vs config / v4: auto @theme) ──
   let useCssVariables = false;
   let selectedCssFile = null;
-  if (processType === 'colors' || processType === 'both') {
-    const { cssVars } = await inquirer.prompt({
-      type: 'confirm',
-      name: 'cssVars',
-      message: chalk.cyan('Use CSS variables for theming?') + chalk.dim(' (generates --var-name in :root)'),
-      default: false,
-    });
-    useCssVariables = cssVars;
 
-    // If CSS variables enabled, let user pick which CSS file
+  // Detect if project uses Tailwind v4 (has @theme or @import 'tailwindcss' in CSS)
+  let isTailwindV4 = false;
+  for (const cssFile of projectInfo.cssFiles) {
+    try {
+      const cssContent = readFileSync(path.join(rootDir, cssFile), 'utf-8');
+      if (cssContent.includes('@theme') || cssContent.includes("@import 'tailwindcss'") || cssContent.includes('@import "tailwindcss"')) {
+        isTailwindV4 = true;
+        selectedCssFile = cssFile;
+        break;
+      }
+    } catch (e) { /* skip */ }
+  }
+
+  if (isTailwindV4) {
+    console.log(chalk.green(`  ✓ Tailwind v4 detected`) + chalk.dim(` — colors will be added to @theme in ${selectedCssFile}`));
+    console.log(chalk.dim('    (No tailwind.config.js changes needed)\n'));
+    // v4 always uses @theme in CSS — no question needed
+    useCssVariables = false;
+  } else if (processType === 'colors' || processType === 'both') {
+    const { approach } = await inquirer.prompt({
+      type: 'list',
+      name: 'approach',
+      message: chalk.cyan('How should colors be stored?'),
+      choices: [
+        {
+          name: `${chalk.yellow('●')} Direct in tailwind.config.js ${chalk.dim('— hex values in theme.extend.colors')}`,
+          value: 'config',
+        },
+        {
+          name: `${chalk.cyan('●')} CSS Variables + config ${chalk.dim('— :root vars + var() refs in config')}`,
+          value: 'cssVars',
+        },
+      ],
+    });
+    useCssVariables = approach === 'cssVars';
+
+    // If CSS variables, let user pick which CSS file
     if (useCssVariables && projectInfo.cssFiles.length > 0) {
       if (projectInfo.cssFiles.length === 1) {
         selectedCssFile = projectInfo.cssFiles[0];
-        console.log(chalk.dim(`  → Will write to: ${chalk.white(selectedCssFile)}\n`));
+        console.log(chalk.dim(`  → CSS variables will be written to: ${chalk.white(selectedCssFile)}\n`));
       } else {
         const { cssFile } = await inquirer.prompt({
           type: 'list',
           name: 'cssFile',
-          message: chalk.cyan('Which CSS file should contain the variables?'),
+          message: chalk.cyan('Which CSS file should contain the :root variables?'),
           choices: projectInfo.cssFiles.map(f => ({
             name: chalk.white(f),
             value: f,
@@ -262,20 +291,24 @@ async function main() {
         selectedCssFile = cssFile;
       }
     } else if (useCssVariables && projectInfo.cssFiles.length === 0) {
-      console.log(chalk.yellow('  ⚠ No CSS files detected. Variables will be skipped unless a CSS file is found.\n'));
+      console.log(chalk.yellow('  ⚠ No CSS files detected — will fall back to direct config.\n'));
+      useCssVariables = false;
     }
   }
 
   // ── Question 4: Exclude dirs ──────────────────────────────────────
-  const defaultExcludes = ['node_modules', '.git', 'dist', 'build', '.next', '.nuxt'];
+  const smartExcludes = buildExcludeList(rootDir);
+  const gitignoreCount = smartExcludes.length;
+  console.log(chalk.dim(`  Auto-excluding ${chalk.white.bold(gitignoreCount)} directories`) + chalk.dim(` (defaults + .gitignore)`));
+
   const { customizeExcludes } = await inquirer.prompt({
     type: 'confirm',
     name: 'customizeExcludes',
-    message: chalk.cyan('Customize excluded directories?') + chalk.dim(` (default: ${defaultExcludes.join(', ')})`),
+    message: chalk.cyan('Add more directories to exclude?') + chalk.dim(` (currently ${gitignoreCount} patterns)`),
     default: false,
   });
 
-  let excludeDirs = [...defaultExcludes];
+  let excludeDirs = [...smartExcludes];
   if (customizeExcludes) {
     const { extraExcludes } = await inquirer.prompt({
       type: 'input',
@@ -285,8 +318,8 @@ async function main() {
     });
     if (extraExcludes) {
       const extras = extraExcludes.split(',').map(d => d.trim()).filter(Boolean);
-      excludeDirs = [...excludeDirs, ...extras];
-      console.log(chalk.dim(`  → Excluding: ${chalk.white(excludeDirs.join(', '))}\n`));
+      excludeDirs = [...new Set([...excludeDirs, ...extras])];
+      console.log(chalk.dim(`  → Total excludes: ${chalk.white(excludeDirs.length)} directories\n`));
     }
   }
 
