@@ -10,37 +10,36 @@
 - 📏 **Unit Conversion** — Replaces arbitrary px/rem/em/% values with Tailwind's naming conventions
 - ⚡ **Offline & Fast** — No external API calls, everything runs locally
 - 🔍 **Smart Detection** — Prioritizes existing Tailwind config colors first
-- 🎯 **Auto Config Update** — Automatically updates your `tailwind.config.js` with new semantic values
+- 🎯 **Auto Config Update** — Automatically updates your `tailwind.config.js` or `@theme` (v4) with new semantic values
 - 🏷️ **Prefix Support** — Add custom prefixes to avoid naming conflicts
 - 🎭 **CSS Variables** — Optionally generates CSS `--var()` variables for dynamic theming
 - 🧠 **Project Detection** — Auto-detects your framework (Next.js, Nuxt, Vue, React, etc.)
+- 🚫 **Smart Excludes** — Auto-ignores design files, docs, tests, build output, and `.gitignore` patterns
 
 ## Installation
 
-### Using npx (recommended)
-
-```bash
-npx tailwind-cleaner
-```
-
-### Using bunx
+### Using bunx (recommended)
 
 ```bash
 bunx tailwind-cleaner
+```
+
+### Using npx
+
+```bash
+npx tailwind-cleaner
 ```
 
 ### Local Installation
 
 ```bash
 bun add -d tailwind-cleaner
-# or
-npm install tailwind-cleaner --save-dev
 ```
 
 Then run:
 
 ```bash
-npx tailwind-cleaner
+bunx tailwind-cleaner
 ```
 
 ## Usage
@@ -59,6 +58,12 @@ in your Tailwind CSS projects — offline & fast
 by domz-1 · github.com/domz-1/tailwind-cleaner
 ```
 
+### Run in a specific directory
+
+```bash
+bunx tailwind-cleaner ./src
+```
+
 ### CLI Flags
 
 | Flag | Description |
@@ -69,29 +74,53 @@ by domz-1 · github.com/domz-1/tailwind-cleaner
 ## How It Works
 
 1. **Scans** your project files for Tailwind classes with arbitrary values
-2. **Matches** colors against your existing Tailwind config (highest priority)
-3. **Names** unknown colors using the `color-2-name` library (offline, fast)
+2. **Matches** colors against your existing Tailwind config/theme (highest priority)
+3. **Names** unknown colors using luminance + hue-aware logic (e.g., `deep-black`, `blue-grey`)
 4. **Converts** numeric values to Tailwind's spacing scale
 5. **Replaces** all instances with consistent semantic names
-6. **Updates** your `tailwind.config.js` with the new values
+6. **Updates** your config — `@theme` for Tailwind v4 or `tailwind.config.js` for v3
 
-## Tailwind CSS v4 Configuration Note
+## Tailwind v4 Support
 
-If you're using Tailwind CSS v4 with a `tailwind.config.js` file, add this at the top of your CSS file:
+The tool **auto-detects** Tailwind v4 projects (via `@import 'tailwindcss'` or `@theme` in your CSS). When v4 is detected:
+
+- Colors are added directly to your `@theme` block as `--color-name: #hex;`
+- No `tailwind.config.js` changes are needed
+- Existing `@theme` colors are preserved and deduplicated
 
 ```css
-@config "./path/to/tailwind.config.js";
-@import 'tailwindcss';
+@theme inline {
+  /* Colors added by tailwind-cleaner */
+  --color-seen-black: #09090b;
+  --color-seen-white: #ffffff;
+  --color-seen-midnightblue: #001a48;
+}
 ```
 
-## CSS Variables Support
+## Tailwind v3 Support
 
-When you choose CSS variables mode, the tool will:
+For v3 projects, choose between two approaches:
 
-1. Generate CSS variables (e.g., `--ocean-blue: #1a73e8;`) in your global CSS file
-2. Update your `tailwind.config.js` to reference them (e.g., `'ocean-blue': 'var(--ocean-blue)'`)
+### Direct hex in config
 
-This enables easy dynamic theming and is compatible with modern Tailwind practices.
+Colors are added as hex values directly to `theme.extend.colors` in `tailwind.config.js`.
+
+### CSS Variables + config
+
+1. Generates CSS variables (e.g., `--ocean-blue: #1a73e8;`) in your global CSS `:root`
+2. Updates `tailwind.config.js` to reference them (e.g., `'ocean-blue': 'var(--ocean-blue)'`)
+
+## Smart Directory Exclusion
+
+The tool auto-excludes **46+ directory patterns** by default, including:
+
+- 📦 `node_modules`, `.pnpm`, `.yarn`
+- 🏗️ `dist`, `build`, `out`, `coverage`
+- 🎨 `design`, `designs`, `docs`, `mockups`, `public`, `assets`
+- 🧪 `test`, `tests`, `__tests__`, `e2e`, `cypress`
+- ⚙️ `.next`, `.nuxt`, `.svelte-kit`
+
+Plus any patterns from your project's `.gitignore` are automatically honored.
 
 ## Contributing
 
