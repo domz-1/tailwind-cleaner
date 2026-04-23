@@ -1,11 +1,11 @@
 {
     "name": "tailwind-cleaner",
-    "version": "1.0.27",
-    "description": "A tool to replace hex colors with named colors in Tailwind CSS projects",
+    "version": "2.0.0",
+    "description": "A smart CLI tool to replace arbitrary hex colors and values with semantic named tokens in Tailwind CSS projects",
     "main": "lib/index.js",
     "type": "module",
     "bin": {
-        "tailwind-cleaner-pkg": "bin/cli.js"
+        "tailwind-cleaner": "bin/cli.js"
     },
     "scripts": {
         "start": "node bin/cli.js"
@@ -32,14 +32,24 @@
         "developer-tools",
         "frontend"
     ],
-    "author": "Your Name",
+    "author": {
+        "name": "domz-1",
+        "url": "https://github.com/domz-1"
+    },
     "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/domz-1/tailwind-cleaner"
     },
+    "homepage": "https://github.com/domz-1/tailwind-cleaner#readme",
+    "bugs": {
+        "url": "https://github.com/domz-1/tailwind-cleaner/issues"
+    },
     "dependencies": {
+        "boxen": "^8.0.1",
+        "chalk": "^5.4.1",
         "color-2-name": "^1.4.4",
-        "inquirer": "^12.9.1"
+        "inquirer": "^12.9.1",
+        "ora": "^8.2.0"
     }
 }

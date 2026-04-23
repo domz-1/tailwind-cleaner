@@ -1,71 +1,106 @@
-# Tailwind Cleaner
+# Tailwind Cleaner ✦
+
 ![Tailwind Cleaner Logo](https://github.com/domz-1/tailwind-cleaner/raw/main/public/logo.jpg)
-A tool to convert arbitrary values (hex colors, units, etc.) into semantic named values in Tailwind CSS projects.
-## Table of Contents
-- [Tailwind Cleaner](#tailwind-cleaner)
-  - [Table of Contents](#table-of-contents)
-  - [Features](#features)
-  - [Installation](#installation)
-    - [Using npx (recommended)](#using-npx-recommended)
-    - [Local Installation](#local-installation)
-  - [Tailwind CSS v4 Configuration Note](#tailwind-css-v4-configuration-note)
-  - [Theme Variable Namespaces](#theme-variable-namespaces)
-  - [Usage](#usage)
-  - [How It Works](#how-it-works)
-  - [Contributing](#contributing)
-  - [License](#license)
+
+> A smart CLI tool to replace arbitrary hex colors and values with semantic named tokens in Tailwind CSS projects — fully offline, no API needed.
+
 ## Features
-- Replaces hex colors and arbitrary values with semantic names in your project files
-- Converts numeric values and units (px, rem, etc.) to Tailwind's naming conventions
-- Prioritizes existing Tailwind config colors and spacing values
-- Uses Color Pizza API for color name matching
-- Falls back to color-2-name for local color matching
-- Automatically updates your tailwind.config.js with new semantic values
-- Maintains consistent naming across your entire project
-- Adding prefixes to semantic values to avoid naming conflicts
-- **[NEW]** Supports generating CSS variables for theming (modern Tailwind approach)
+
+- 🎨 **Color Replacement** — Converts hex/rgb/hsl colors to semantic names using the `color-2-name` library (100% offline)
+- 📏 **Unit Conversion** — Replaces arbitrary px/rem/em/% values with Tailwind's naming conventions
+- ⚡ **Offline & Fast** — No external API calls, everything runs locally
+- 🔍 **Smart Detection** — Prioritizes existing Tailwind config colors first
+- 🎯 **Auto Config Update** — Automatically updates your `tailwind.config.js` with new semantic values
+- 🏷️ **Prefix Support** — Add custom prefixes to avoid naming conflicts
+- 🎭 **CSS Variables** — Optionally generates CSS `--var()` variables for dynamic theming
+- 🧠 **Project Detection** — Auto-detects your framework (Next.js, Nuxt, Vue, React, etc.)
+
 ## Installation
+
 ### Using npx (recommended)
-Run directly with npx:
+
 ```bash
 npx tailwind-cleaner
 ```
+
+### Using bunx
+
+```bash
+bunx tailwind-cleaner
+```
+
 ### Local Installation
-Install locally instead of global:
+
 ```bash
-npm install tailwind-cleaner --save-dev
+bun add -d tailwind-cleaner
 # or
-npm i -g tailwind-cleaner
+npm install tailwind-cleaner --save-dev
 ```
-Then run it using:
+
+Then run:
+
 ```bash
 npx tailwind-cleaner
 ```
+
+## Usage
+
+1. Run the tool in your project directory
+2. Choose what to process (colors, units, or both)
+3. Optionally add a prefix and enable CSS variables
+4. The tool scans your files, replaces arbitrary values, and updates your config
+
+```
+✦ Tailwind Cleaner v2.0.0
+
+Replace arbitrary values with semantic tokens
+in your Tailwind CSS projects — offline & fast
+
+by domz-1 · github.com/domz-1/tailwind-cleaner
+```
+
+### CLI Flags
+
+| Flag | Description |
+|------|-------------|
+| `--help, -h` | Show help message |
+| `--version, -v` | Show version number |
+
+## How It Works
+
+1. **Scans** your project files for Tailwind classes with arbitrary values
+2. **Matches** colors against your existing Tailwind config (highest priority)
+3. **Names** unknown colors using the `color-2-name` library (offline, fast)
+4. **Converts** numeric values to Tailwind's spacing scale
+5. **Replaces** all instances with consistent semantic names
+6. **Updates** your `tailwind.config.js` with the new values
+
 ## Tailwind CSS v4 Configuration Note
+
 If you're using Tailwind CSS v4 with a `tailwind.config.js` file, add this at the top of your CSS file:
+
 ```css
 @config "./path/to/tailwind.config.js";
 @import 'tailwindcss';
 ```
-## CSS Variables Support (New)
-The tool now supports the modern approach of using CSS variables for theming. When prompted, if you choose "Yes" to use CSS variables:
-1.  The tool will generate CSS variables (e.g., `--primary: 255 0 0;`) in your global CSS file (`src/globals.css`, `src/index.css`, etc.).
-2.  It will update your `tailwind.config.js` to reference these variables (e.g., `primary: 'rgb(var(--primary) / <alpha-value>)'`).
 
-This allows for easier dynamic theming and is compatible with modern Tailwind practices.
-## Usage
-1. Run the tool in your project directory
-2. It will scan your project files for Tailwind classes and arbitrary values
-3. The tool will suggest semantic replacements
-4. Confirm changes to update your files and `tailwind.config.js`
-## How It Works
-1. Scans your project files for Tailwind classes and arbitrary values
-2. Matches colors against existing Tailwind config values first
-3. For new colors, uses Color Pizza API or falls back to color-2-name
-4. Converts numeric values to Tailwind's spacing scale
-5. Updates all instances with consistent semantic names
-6. Adds new values to your Tailwind config
+## CSS Variables Support
+
+When you choose CSS variables mode, the tool will:
+
+1. Generate CSS variables (e.g., `--ocean-blue: #1a73e8;`) in your global CSS file
+2. Update your `tailwind.config.js` to reference them (e.g., `'ocean-blue': 'var(--ocean-blue)'`)
+
+This enables easy dynamic theming and is compatible with modern Tailwind practices.
+
 ## Contributing
-Contributions are welcome! Please open an issue or PR on GitHub.
+
+Contributions are welcome! Please open an issue or PR on [GitHub](https://github.com/domz-1/tailwind-cleaner).
+
+## Author
+
+**[domz-1](https://github.com/domz-1)** · Made with ♥
+
 ## License
+
 MIT
